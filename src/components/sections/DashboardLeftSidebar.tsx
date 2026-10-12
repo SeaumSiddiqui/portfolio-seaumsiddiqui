@@ -383,7 +383,7 @@ export function DashboardLeftSidebar({
 
           {/* Launch Sanity Studio */}
           <a
-            href="http://localhost:3333"
+            href="https://studio-seaumsiddiqui.sanity.studio/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-between p-2 rounded-[2px] border border-brand-border hover:bg-brand-surface hover:opacity-80 transition-all cursor-pointer group"
