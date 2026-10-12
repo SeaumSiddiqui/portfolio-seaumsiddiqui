@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --font-geist: "Geist", sans-serif;
+  
+  --color-brand-bg: #ffffff;
+  --color-brand-text: #121212;
+  --color-brand-muted: #333333;
+  --color-brand-border: #e3e3e3;
+  --color-brand-surface: #f6f6f6;
+
+  /* Spacing & Layout */
+  --spacing-section-sm: 4rem;
+  --spacing-section-md: 8rem;
+  --spacing-section-lg: 12rem;
+  
+  --width-container-max: 1200px;
+}
+
+/* Base Styles */
+@layer base {
+  html,
+  body {
+    @apply bg-brand-bg text-brand-text font-inter subpixel-antialiased;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  /* Global scrollbar removal for Chrome, Safari, Edge */
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* Global scrollbar removal for Firefox and IE/Edge */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
