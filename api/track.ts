@@ -26,8 +26,16 @@ export default async function handler(req: any, res: any) {
     }
 
     const { type = 'pageview', path = '/', label, meta = {} } = body;
-    const kvUrl = process.env.KV_REST_API_URL;
-    const kvToken = process.env.KV_REST_API_TOKEN;
+    const kvUrl =
+      process.env.KV_REST_API_URL ||
+      process.env.UPSTASH_REDIS_REST_URL ||
+      process.env.REDIS_REST_API_URL ||
+      process.env.STORAGE_REST_API_URL;
+    const kvToken =
+      process.env.KV_REST_API_TOKEN ||
+      process.env.UPSTASH_REDIS_REST_TOKEN ||
+      process.env.REDIS_REST_API_TOKEN ||
+      process.env.STORAGE_REST_API_TOKEN;
 
     if (kvUrl && kvToken) {
       const commands: any[] = [];

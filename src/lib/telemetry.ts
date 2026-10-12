@@ -252,6 +252,7 @@ export async function fetchTelemetryAsync(): Promise<TelemetryState> {
 }
 
 // Non-blocking pulse delivery to Vercel Serverless Function (/api/track)
+// and dual-dispatch to Vercel Web Analytics (window.va)
 async function sendRemotePulse(payload: {
   type: string;
   path?: string;
@@ -259,6 +260,25 @@ async function sendRemotePulse(payload: {
   meta?: Record<string, any>;
 }): Promise<void> {
   if (typeof window === 'undefined') return;
+
+  // 1. Dispatch to Vercel Web Analytics if initialized
+  try {
+    const va = (window as any).va;
+    if (typeof va === 'function') {
+      va('event', {
+        name: payload.type,
+        data: {
+          path: payload.path,
+          label: payload.label,
+          ...payload.meta,
+        },
+      });
+    }
+  } catch {
+    // Ignore Vercel client tracking errors
+  }
+
+  // 2. Dispatch to custom Redis telemetry endpoint
   try {
     fetch('/api/track', {
       method: 'POST',

@@ -22,6 +22,29 @@ function ScrollToTop() {
   return null;
 }
 
+// Automatically connects to Vercel Web Analytics & Speed Insights in production
+function VercelObservability() {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost')) {
+      // 1. Vercel Web Analytics script
+      if (!document.querySelector('script[src*="_vercel/insights"]')) {
+        const s1 = document.createElement('script');
+        s1.src = '/_vercel/insights/script.js';
+        s1.defer = true;
+        document.head.appendChild(s1);
+      }
+      // 2. Vercel Speed Insights script
+      if (!document.querySelector('script[src*="_vercel/speed-insights"]')) {
+        const s2 = document.createElement('script');
+        s2.src = '/_vercel/speed-insights/script.js';
+        s2.defer = true;
+        document.head.appendChild(s2);
+      }
+    }
+  }, []);
+  return null;
+}
+
 function HomePage() {
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-[1fr_1.65fr_1fr] pt-11 min-h-screen">
@@ -87,6 +110,7 @@ function App() {
   return (
     <div className="min-h-screen bg-brand-bg text-brand-text selection:bg-brand-text selection:text-brand-bg font-sans tracking-tight antialiased">
       <ScrollToTop />
+      <VercelObservability />
       <TopNav />
       <Routes>
         <Route path="/" element={<HomePage />} />
