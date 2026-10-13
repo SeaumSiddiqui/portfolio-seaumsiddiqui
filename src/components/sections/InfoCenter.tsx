@@ -312,6 +312,33 @@ function SoftwareIcon({ name }: { name: string }) {
   );
 }
 
+function ResumeButton({ resumeUrl }: { resumeUrl: string }) {
+  return (
+    <a
+      href={resumeUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => recordResumeClick('info')}
+      className="font-inter font-medium text-[14px] leading-[14px] text-[rgb(18,18,18)] hover:opacity-70 transition-opacity flex items-center gap-1.5"
+    >
+      <svg
+        className="w-3.5 h-3.5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+      <span>Download Resume</span>
+    </a>
+  );
+}
+
 export function InfoCenter() {
   const { profile, isLoading } = useSanityProfile();
 
@@ -344,9 +371,11 @@ export function InfoCenter() {
     );
   }
 
+  const hasExperience = experiences.length > 0;
+
   return (
     <div className="w-full flex flex-col px-[15px] pt-12 lg:pt-24 pb-16 lg:pb-24">
-      {/* 1. Bio Paragraphs & Resume Action */}
+      {/* 1. Bio Paragraphs */}
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -361,34 +390,6 @@ export function InfoCenter() {
             {bioBody}
           </p>
         )}
-
-        {/* If Resume is uploaded, provide a direct download link */}
-        {profile?.resumeUrl && (
-          <div className="mt-8 pt-4 border-t border-brand-border">
-            <a
-              href={profile.resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => recordResumeClick('info')}
-              className="inline-flex items-center gap-2 font-inter font-semibold text-[14px] text-brand-text hover:opacity-70 transition-opacity"
-            >
-              <svg
-                className="w-4 h-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" y1="15" x2="12" y2="3" />
-              </svg>
-              <span>Download Resume (PDF)</span>
-            </a>
-          </div>
-        )}
       </motion.div>
 
       {/* 2. Software Stack (Only rendered if user configured items in Sanity) */}
@@ -399,9 +400,14 @@ export function InfoCenter() {
           transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           className="mt-20 sm:mt-24 flex flex-col w-full"
         >
-          <h2 className="font-geist font-medium text-[20px] lg:text-[26px] leading-[26px] lg:leading-[29px] tracking-[-0.03em] text-[rgb(18,18,18)] mb-4 sm:mb-5">
-            Software Stack
-          </h2>
+          <div className="flex justify-between items-baseline mb-4 sm:mb-5">
+            <h2 className="font-geist font-medium text-[20px] lg:text-[26px] leading-[26px] lg:leading-[29px] tracking-[-0.03em] text-[rgb(18,18,18)]">
+              Software Stack
+            </h2>
+            {profile?.resumeUrl && !hasExperience && (
+              <ResumeButton resumeUrl={profile.resumeUrl} />
+            )}
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             {softwareStack.map((item, idx) => (
               <div
@@ -435,8 +441,15 @@ export function InfoCenter() {
         </motion.section>
       )}
 
+      {/* Fallback Resume Link if both Software Stack and Experience are empty */}
+      {profile?.resumeUrl && softwareStack.length === 0 && !hasExperience && (
+        <div className="mt-8 flex">
+          <ResumeButton resumeUrl={profile.resumeUrl} />
+        </div>
+      )}
+
       {/* 3. Experience (Only rendered if user configured experience in Sanity) */}
-      {experiences.length > 0 && (
+      {hasExperience && (
         <motion.section
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -447,6 +460,9 @@ export function InfoCenter() {
             <h2 className="font-geist font-medium text-[20px] lg:text-[26px] leading-[26px] lg:leading-[29px] tracking-[-0.03em] text-[rgb(18,18,18)]">
               Experience
             </h2>
+            {profile?.resumeUrl && (
+              <ResumeButton resumeUrl={profile.resumeUrl} />
+            )}
           </div>
 
           <div className="flex flex-col w-full border-t border-brand-border">
