@@ -45,6 +45,7 @@ export interface SoftwareStackItem {
   name: string;
   description: string;
   icon?: string;
+  iconImage?: SanityImage;
 }
 
 export interface ExperienceItem {

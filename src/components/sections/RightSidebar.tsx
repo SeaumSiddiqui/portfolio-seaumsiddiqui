@@ -9,9 +9,9 @@ export function RightSidebar() {
 
   const portraitUrl = profile?.profileImage 
     ? urlFor(profile.profileImage).width(600).url() 
-    : "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop";
+    : null;
     
-  const roles = profile?.roles?.length ? profile.roles : ["Backend Engineer", "Java, Spring Boot"];
+  const roles = profile?.roles?.length ? profile.roles : ["Backend Engineer"];
   const location = profile?.location || "Dhaka, Bangladesh";
   const sinceYear = profile?.sinceYear || 2026;
 
@@ -25,15 +25,24 @@ export function RightSidebar() {
              <span className="font-geist font-medium text-[14px] leading-[20px] tracking-tight text-brand-text whitespace-nowrap">Available for work</span>
           </div>
           
-          {/* Right Side: Portrait and Bio List */}
+          {/* Right Side: Portrait or Minimalist Monogram and Bio List */}
           <div className="w-[clamp(120px,55cqw,240px)] flex flex-col ml-auto">
             {!isLoading && (
-              <ParallaxImage 
-                src={portraitUrl} 
-                alt="Author Portrait"
-                className="w-full aspect-[4/5] object-cover rounded-[2px]"
-                parallaxAmount={5}
-              />
+              portraitUrl ? (
+                <ParallaxImage 
+                  src={portraitUrl} 
+                  alt="Seaum Siddiqui"
+                  className="w-full aspect-[4/5] object-cover rounded-[2px]"
+                  parallaxAmount={5}
+                />
+              ) : (
+                <div className="w-full aspect-[4/5] bg-brand-surface rounded-[2px] border border-brand-border flex flex-col items-center justify-center select-none">
+                  <span className="font-geist font-medium text-[28px] tracking-tighter text-brand-text">SS</span>
+                  <span className="font-mono text-[10px] tracking-widest uppercase text-brand-muted mt-1 opacity-75">
+                    Seaum Siddiqui
+                  </span>
+                </div>
+              )
             )}
             <div className="text-right mt-8 font-geist font-medium text-[14px] leading-[20px] flex flex-col gap-[2px] items-end">
               {roles.map((r, i) => (
