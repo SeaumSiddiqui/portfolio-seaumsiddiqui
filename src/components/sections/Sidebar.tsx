@@ -55,130 +55,98 @@ export function Sidebar() {
           </a>
         </div>
 
-        {/* Action Links & Accordions List */}
+        {/* Action Links & Accordions List (Only renders what exists in Sanity) */}
         <div className="flex flex-col text-[16px] leading-[22px] font-geist font-medium text-brand-text w-full mt-auto shrink-0 mb-12 lg:mb-0">
-          <a 
-            href={profile?.resumeUrl || "#"} 
-            target={profile?.resumeUrl ? "_blank" : "_self"} 
-            rel={profile?.resumeUrl ? "noopener noreferrer" : undefined}
-            onClick={(e) => {
-              if (!profile?.resumeUrl) e.preventDefault();
-              recordResumeClick('sidebar');
-            }}
-            className="flex items-center justify-between pb-1 cursor-pointer group hover:opacity-70 transition-opacity"
-          >
-            <span>View Resume</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 text-brand-text -rotate-45 group-hover:rotate-0 transition-transform duration-300">
-              <path d="M5 12h14"></path>
-              <path d="m12 5 7 7-7 7"></path>
-            </svg>
-          </a>
-          
-          <div className="border-t border-brand-border py-1">
-            <div 
-              className="flex items-center justify-between cursor-pointer group hover:opacity-70 transition-opacity"
-              onClick={() => toggleSection('expertise')}
+          {profile?.resumeUrl && (
+            <a 
+              href={profile.resumeUrl} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              onClick={() => recordResumeClick('sidebar')}
+              className="flex items-center justify-between pb-1 cursor-pointer group hover:opacity-70 transition-opacity"
             >
-              <span>Expertise and Skills</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 text-brand-text transition-transform duration-300">
-                <path 
-                  d={openSection === 'expertise' ? "M5 12h14" : "M12 5v14 M5 12h14"}
-                  style={{ transition: 'd 0.3s ease' }}
-                />
+              <span>View Resume</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 text-brand-text -rotate-45 group-hover:rotate-0 transition-transform duration-300">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
               </svg>
-            </div>
-            {/* Collapsible Content: Expertise */}
-            <AnimatePresence>
-              {openSection === 'expertise' && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  className="overflow-hidden"
-                >
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2 pt-6 pb-2 text-[11px] font-mono leading-relaxed opacity-80 uppercase tracking-tight">
-                    {profile?.expertise?.length ? (
-                      profile.expertise.map((cat, idx) => (
+            </a>
+          )}
+          
+          {profile?.expertise && profile.expertise.length > 0 && (
+            <div className={`border-t border-brand-border py-1 ${!profile?.resumeUrl ? 'border-t-0' : ''}`}>
+              <div 
+                className="flex items-center justify-between cursor-pointer group hover:opacity-70 transition-opacity"
+                onClick={() => toggleSection('expertise')}
+              >
+                <span>Expertise and Skills</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 text-brand-text transition-transform duration-300">
+                  <path 
+                    d={openSection === 'expertise' ? "M5 12h14" : "M12 5v14 M5 12h14"}
+                    style={{ transition: 'd 0.3s ease' }}
+                  />
+                </svg>
+              </div>
+              {/* Collapsible Content: Expertise */}
+              <AnimatePresence>
+                {openSection === 'expertise' && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-2 pt-6 pb-2 text-[11px] font-mono leading-relaxed opacity-80 uppercase tracking-tight">
+                      {profile.expertise.map((cat, idx) => (
                         <div key={idx} className="flex flex-col gap-1">
                           <div className="font-bold mb-1">{cat.category}</div>
                           {cat.skills?.map((skill, sIdx) => (
                             <div key={sIdx}>{skill}</div>
                           ))}
                         </div>
-                      ))
-                    ) : (
-                      <>
-                        <div className="flex flex-col gap-1">
-                          <div className="font-bold mb-1">Core</div>
-                          <div>Java</div>
-                          <div>Spring Boot</div>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <div className="font-bold mb-1">Data</div>
-                          <div>PostgreSQL</div>
-                          <div>Redis</div>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <div className="font-bold mb-1">Deploy</div>
-                          <div>Vercel</div>
-                          <div>Oracle</div>
-                          <div>AWS</div>
-                          <div>Docker</div>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                          <div className="font-bold mb-1">Tools</div>
-                          <div>Postman</div>
-                          <div>Keycloak</div>
-                          <div>Sanity CMS</div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <div className="border-t border-brand-border pt-1 pb-0">
-            <div 
-              className="flex items-center justify-between cursor-pointer group hover:opacity-70 transition-opacity"
-              onClick={() => toggleSection('awards')}
-            >
-              <span>Awards and Certifications</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 text-brand-text transition-transform duration-300">
-                <path 
-                  d={openSection === 'awards' ? "M5 12h14" : "M12 5v14 M5 12h14"}
-                  style={{ transition: 'd 0.3s ease' }}
-                />
-              </svg>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            {/* Collapsible Content: Awards */}
-            <AnimatePresence>
-              {openSection === 'awards' && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: 'auto', opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                  className="overflow-hidden"
-                >
-                  <div className="flex flex-col gap-2 pt-4 pb-2 text-[11px] font-mono leading-relaxed opacity-80 uppercase tracking-tight">
-                    {profile?.awards?.length ? (
-                      profile.awards.map((award, idx) => (
+          )}
+
+          {profile?.awards && profile.awards.length > 0 && (
+            <div className="border-t border-brand-border pt-1 pb-0">
+              <div 
+                className="flex items-center justify-between cursor-pointer group hover:opacity-70 transition-opacity"
+                onClick={() => toggleSection('awards')}
+              >
+                <span>Awards and Certifications</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 text-brand-text transition-transform duration-300">
+                  <path 
+                    d={openSection === 'awards' ? "M5 12h14" : "M12 5v14 M5 12h14"}
+                    style={{ transition: 'd 0.3s ease' }}
+                  />
+                </svg>
+              </div>
+              {/* Collapsible Content: Awards */}
+              <AnimatePresence>
+                {openSection === 'awards' && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="flex flex-col gap-2 pt-4 pb-2 text-[11px] font-mono leading-relaxed opacity-80 uppercase tracking-tight">
+                      {profile.awards.map((award, idx) => (
                         <div key={idx}>• {award}</div>
-                      ))
-                    ) : (
-                      <>
-                        <div>• AWS Certified Solutions Architect</div>
-                        <div>• Oracle Certified Professional</div>
-                      </>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
         </div>
       </FadeIn>
     </aside>

@@ -13,7 +13,7 @@ export function InfoSidebar() {
     ? urlFor(profile.infoImage).width(800).url()
     : profile?.profileImage
     ? urlFor(profile.profileImage).width(800).url()
-    : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop';
+    : null;
 
   const currentYear = new Date().getFullYear();
   const currentYearShort = currentYear.toString().slice(-2);
@@ -68,13 +68,22 @@ export function InfoSidebar() {
       >
         <div className="flex lg:block items-end justify-between w-full lg:w-[72%] lg:min-w-[220px] lg:max-w-[275px]">
           <div className="w-[66.5%] sm:w-[69%] lg:w-full overflow-hidden rounded-[2px] bg-brand-surface shrink-0">
-            <ParallaxImage
-              src={portraitUrl}
-              alt="Author Portrait"
-              className="w-full aspect-[3/4] lg:aspect-[4/5]"
-              imageClassName="transition-transform duration-700 ease-out"
-              parallaxAmount={8}
-            />
+            {portraitUrl ? (
+              <ParallaxImage
+                src={portraitUrl}
+                alt="Seaum Siddiqui"
+                className="w-full aspect-[3/4] lg:aspect-[4/5]"
+                imageClassName="transition-transform duration-700 ease-out"
+                parallaxAmount={8}
+              />
+            ) : (
+              <div className="w-full aspect-[3/4] lg:aspect-[4/5] bg-brand-surface rounded-[2px] border border-brand-border flex flex-col items-center justify-center select-none">
+                <span className="font-geist font-medium text-[28px] tracking-tighter text-brand-text">SS</span>
+                <span className="font-mono text-[10px] tracking-widest uppercase text-brand-muted mt-1 opacity-75">
+                  Seaum Siddiqui
+                </span>
+              </div>
+            )}
           </div>
           <div className="text-right font-geist font-medium text-[12px] lg:text-[14px] leading-[17px] lg:leading-[20px] text-[rgb(117,117,117)] lg:mt-1.5 shrink-0 pl-3">
             {copyrightText}

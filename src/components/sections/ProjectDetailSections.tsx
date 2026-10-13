@@ -31,30 +31,15 @@ export function ProjectDetailSections({ project, isLoading, className = '' }: Pr
   };
 
   if (isLoading || !project) {
-    return (
-      <div className={`flex flex-col gap-4 ${className}`}>
-        <div className="h-5 w-1/3 bg-brand-surface animate-pulse rounded-[2px]" />
-        <div className="h-14 w-full bg-brand-surface animate-pulse rounded-[2px]" />
-        <div className="h-px w-full bg-brand-border my-2" />
-        <div className="h-5 w-1/3 bg-brand-surface animate-pulse rounded-[2px]" />
-        <div className="h-14 w-full bg-brand-surface animate-pulse rounded-[2px]" />
-      </div>
-    );
+    return null;
   }
 
-  // Use nested sections from Sanity; fallback to engineering defaults if not populated yet
-  const sections: ProjectSection[] = (project.sections && project.sections.length > 0)
-    ? project.sections
-    : [
-        {
-          title: 'Architecture & Challenge',
-          explanation: "Designing a high-throughput, low-latency architecture capable of handling concurrent operations while maintaining strict data consistency.",
-        },
-        {
-          title: 'Engineering Solution',
-          explanation: 'Implemented resilient retry queues, optimized database indexing schemes, and modular service boundaries to deliver reliable, observable performance.',
-        },
-      ];
+  // Only render if custom sections are explicitly populated in Sanity
+  if (!project.sections || project.sections.length === 0) {
+    return null;
+  }
+
+  const sections: ProjectSection[] = project.sections;
 
   return (
     <FadeIn delay={0.1} className={`w-full ${className}`}>

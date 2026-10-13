@@ -68,15 +68,11 @@ export function ProjectDetailCenter({
     );
   }
 
-  // 1. Overview paragraph text with tailored fallbacks matching the Maelle / Kanso tone
+  // 1. Overview paragraph text from Sanity
   const overviewText = project.description || (
-    project.title === 'DevScope'
-      ? 'DevScope is a developer intelligence platform engineered for real-time code observability, seamless team collaboration, and automated performance tracking.'
-      : project.title === 'EverBloomBD'
-      ? 'EverBloomBD is a contemporary e-commerce and lifestyle platform crafted to deliver seamless shopping experiences, structured clarity, and modern digital aesthetics.'
-      : project.title === 'HookChefAPI'
-      ? 'HookChefAPI is a webhook orchestration and event delivery engine designed for distributed microservices, reliable retries, and high-throughput monitoring.'
-      : `${project.title} is a premium digital experience crafted for teams that value clarity, precision, and timeless aesthetics.`
+    project.technologies && project.technologies.length > 0
+      ? `${project.title} — Engineered with ${project.technologies.slice(0, 4).join(', ')}.`
+      : `${project.title} is a digital project by Seaum Siddiqui.`
   );
 
   const clientCopyright = project.client || project.title;
@@ -89,36 +85,21 @@ export function ProjectDetailCenter({
     ? 'GitHub Repository'
     : 'Live website';
 
-  // 3. Showcase gallery images: priority to project.gallery from Sanity; fallback to coverImage + showcase assets
+  // 3. Showcase gallery images: strictly what user uploaded to project.gallery or project.coverImage
   const images: string[] = React.useMemo(() => {
+    const list: string[] = [];
     if (project.gallery && project.gallery.length > 0) {
-      return project.gallery.map((img) => urlFor(img).width(2000).quality(90).url());
+      project.gallery.forEach((img) => {
+        try {
+          list.push(urlFor(img).width(2000).quality(90).url());
+        } catch {}
+      });
+    } else if (project.coverImage) {
+      try {
+        list.push(urlFor(project.coverImage).width(2000).quality(90).url());
+      } catch {}
     }
-
-    const fallbackList: string[] = [];
-    if (project.coverImage) {
-      fallbackList.push(urlFor(project.coverImage).width(2000).quality(90).url());
-    }
-
-    // Curated high-res showcase assets from portfolio library to ensure a scrollable visual presentation
-    if (project.title === 'DevScope') {
-      fallbackList.push(
-        'https://cdn.sanity.io/images/n5x0r77i/production/c91d838cf516def44c2627c99b6040b7abdaf9e2-2390x1792.jpg',
-        'https://cdn.sanity.io/images/n5x0r77i/production/8f01259a26688036c19c59bac0820ade63c15e51-2752x1536.jpg'
-      );
-    } else if (project.title === 'EverBloomBD') {
-      fallbackList.push(
-        'https://cdn.sanity.io/images/n5x0r77i/production/926db98c03e4def01410525c9ed6b15d721755f1-2816x1536.jpg',
-        'https://cdn.sanity.io/images/n5x0r77i/production/8f01259a26688036c19c59bac0820ade63c15e51-2752x1536.jpg'
-      );
-    } else {
-      fallbackList.push(
-        'https://cdn.sanity.io/images/n5x0r77i/production/c91d838cf516def44c2627c99b6040b7abdaf9e2-2390x1792.jpg',
-        'https://cdn.sanity.io/images/n5x0r77i/production/926db98c03e4def01410525c9ed6b15d721755f1-2816x1536.jpg'
-      );
-    }
-
-    return fallbackList;
+    return list;
   }, [project]);
 
   return (
