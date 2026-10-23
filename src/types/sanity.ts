@@ -9,7 +9,7 @@ export interface SanityImage {
 export interface ProjectSection {
   _key?: string;
   title: string;
-  explanation: string;
+  explanation: any; // string or PortableText blocks array
 }
 
 export interface Project {
